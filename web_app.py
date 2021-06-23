@@ -1,11 +1,6 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
-import loader
-import upwind as up 
-import downwind as down 
-import manoeuvre as man 
-import tactic as tac 
 import map as map
 import streamlit as st 
 from PIL import Image
