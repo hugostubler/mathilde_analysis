@@ -1,7 +1,6 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
-import map as map
 import streamlit as st 
 from PIL import Image
 import pandas as pd
