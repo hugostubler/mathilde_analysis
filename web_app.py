@@ -85,7 +85,7 @@ if __name__ == '__main__':
         plt.title("TWA upwind")
         ax4.plot(abs(Upwind['TWA'].rolling(window=30).mean()))
         st.pyplot(fig4)
-        st.write("avergae TWA", abs(Upwind['TWA'].mean()))
+        st.write("avergae TWA", abs(Upwind['TWA']).mean())
 
         figa, axa = plt.subplots()
         plt.title('Port vs Starboard')
@@ -167,7 +167,7 @@ if __name__ == '__main__':
         
         MEAN_gybe = pd.DataFrame()
         for t in tack: 
-            MEAN_gybe[f"{t}"] = Downwind.BSP[t-30 : t+90].reset_index()['BSP']
+            MEAN_gybe[f"{t}"] = Downwind.BSP[t-30 : t+120].reset_index()['BSP']
         MEAN_gybe.mean(axis=1).plot()
 
         fig, ax = plt.subplots()
@@ -176,7 +176,7 @@ if __name__ == '__main__':
         st.pyplot(fig)
 
         fig1, ax1 = plt.subplots()
-        plt.title("Average gybe :from 30s before to 90s after")
+        plt.title("Average gybe :from 30s before to 120s after")
         ax1.plot(MEAN_gybe.mean(axis=1))
         st.pyplot(fig1)
         
@@ -193,7 +193,7 @@ if __name__ == '__main__':
         st.pyplot(fig)
 
         figA, axA = plt.subplots()
-        plt.title("TWD during the race")
+        plt.title("TWS during the race")
         axA.plot(data.TWS.rolling(window=int(f"{damping}")).mean())
         st.pyplot(figA)
         
