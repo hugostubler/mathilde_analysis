@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 #df = pd.read_csv("data/2021Jun23.csv", low_memory=False)
-df = pd.read_csv("data/2021Jun24.csv", low_memory=False)
+df = pd.read_csv("2021Jun24.csv", low_memory=False)
 df = df.drop(index = 0, axis=0)
 df = df.drop(index = 1, axis=0)
 df = df.dropna(how='all', axis=1)
@@ -43,7 +43,7 @@ def main():
 if __name__ == '__main__':
     title_container = st.beta_container()
     col1, col2 = st.beta_columns([4, 20])
-    image = Image.open('data/mathilde.jpg')
+    image = Image.open('mathilde.jpg')
     with title_container:
         with col1:
             st.image(image, width=100)
