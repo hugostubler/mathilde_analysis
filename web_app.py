@@ -1,6 +1,12 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
+#import loader
+#import upwind as up 
+#import downwind as down 
+#import manoeuvre as man 
+##import tactic as tac 
+#import map as map
 import streamlit as st 
 from PIL import Image
 import pandas as pd
@@ -8,11 +14,12 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
 
-df = pd.read_csv("2021Jun23.csv", low_memory=False)
+#df = pd.read_csv("data/2021Jun23.csv", low_memory=False)
+df = pd.read_csv("data/2021Jun24.csv", low_memory=False)
 df = df.drop(index = 0, axis=0)
 df = df.drop(index = 1, axis=0)
 df = df.dropna(how='all', axis=1)
-data = df[19750:23600]
+data = df[6180:9400]
 data = data.dropna(how='all', axis=1)
 data = data[['Lat', 'Lon', 'COG', 'SOG','Trim','Heel', 'Forestay','Leeway', 'TWD', 'TWS', 'TWA', 'AWA','BSP']]
 data['VMG'] = abs(np.cos(data['TWA']*np.pi/180)*data['BSP'])
@@ -36,7 +43,7 @@ def main():
 if __name__ == '__main__':
     title_container = st.beta_container()
     col1, col2 = st.beta_columns([4, 20])
-    image = Image.open('mathilde.jpg')
+    image = Image.open('data/mathilde.jpg')
     with title_container:
         with col1:
             st.image(image, width=100)
@@ -60,30 +67,30 @@ if __name__ == '__main__':
     if option == "upwind":
         fig1, ax1 = plt.subplots()
         plt.title("Boat speed upwind")
-        ax1.plot(Upwind['BSP'])
+        ax1.plot(Upwind['BSP'].rolling(window=30).mean())
         st.pyplot(fig1)
         fig, ax = plt.subplots()
         plt.title('Port vs Starboard')
-        ax.plot(upwind_bab['BSP'], label = 'port')
-        ax.plot(upwind_trib['BSP'], label = 'starboard')
+        ax.plot(upwind_bab['BSP'].rolling(window=30).mean(), label = 'port')
+        ax.plot(upwind_trib['BSP'].rolling(window=30).mean(), label = 'starboard')
         plt.legend()
         st.pyplot(fig)
 
         fig3, ax3 = plt.subplots()
         plt.title("VMG upwind")
-        ax3.plot(Upwind['VMG'])
+        ax3.plot(Upwind['VMG'].rolling(window=30).mean())
         st.pyplot(fig3)
 
         fig4, ax4 = plt.subplots()
         plt.title("TWA upwind")
-        ax4.plot(abs(Upwind['TWA']))
+        ax4.plot(abs(Upwind['TWA'].rolling(window=30).mean()))
         st.pyplot(fig4)
-        st.write("avergae TWA", abs(Upwind['TWA']).mean())
+        st.write("avergae TWA", abs(Upwind['TWA'].mean()))
 
         figa, axa = plt.subplots()
         plt.title('Port vs Starboard')
-        axa.plot(abs(upwind_bab['TWA']), label = 'port')
-        axa.plot(abs(upwind_trib['TWA']), label = 'starboard')
+        axa.plot(abs(upwind_bab['TWA']).rolling(window=30).mean(), label = 'port')
+        axa.plot(abs(upwind_trib['TWA'].rolling(window=30).mean()), label = 'starboard')
         plt.legend()
         st.pyplot(figa)
         st.write("avergae TWA on port", abs(upwind_bab['TWA']).mean(), "avergae TWA on starboard", abs(upwind_trib['TWA']).mean())
@@ -101,30 +108,30 @@ if __name__ == '__main__':
     if option == "downwind":
         fig1, ax1 = plt.subplots()
         plt.title("Boat speed Downwind")
-        ax1.plot(Downwind['BSP'])
+        ax1.plot(Downwind['BSP'].rolling(window=30).mean())
         st.pyplot(fig1)
         fig, ax = plt.subplots()
         plt.title('Port vs Starboard')
-        ax.plot(downwind_bab['BSP'], label = 'port')
-        ax.plot(downwind_trib['BSP'], label = 'starboard')
+        ax.plot(downwind_bab['BSP'].rolling(window=30).mean(), label = 'port')
+        ax.plot(downwind_trib['BSP'].rolling(window=30).mean(), label = 'starboard')
         plt.legend()
         st.pyplot(fig)
 
         fig3, ax3 = plt.subplots()
         plt.title("VMG Downwind")
-        ax3.plot(Downwind['VMG'])
+        ax3.plot(Downwind['VMG'].rolling(window=30).mean())
         st.pyplot(fig3)
 
         fig4, ax4 = plt.subplots()
         plt.title("TWA Downwind")
-        ax4.plot(abs(Downwind['TWA']))
+        ax4.plot(abs(Downwind['TWA'].rolling(window=30).mean()))
         st.pyplot(fig4)
         st.write("avergae TWA", abs(Downwind['TWA']).mean())
 
         figa, axa = plt.subplots()
         plt.title('Port vs Starboard')
-        axa.plot(abs(downwind_bab['TWA']), label = 'port')
-        axa.plot(abs(downwind_trib['TWA']), label = 'starboard')
+        axa.plot(abs(downwind_bab['TWA'].rolling(window=30).mean()), label = 'port')
+        axa.plot(abs(downwind_trib['TWA'].rolling(window=30).mean()), label = 'starboard')
         plt.legend()
         st.pyplot(figa)
         st.write("avergae TWA on port", abs(downwind_bab['TWA']).mean(), "avergae TWA on starboard", abs(downwind_trib['TWA']).mean())
@@ -160,7 +167,7 @@ if __name__ == '__main__':
         
         MEAN_gybe = pd.DataFrame()
         for t in tack: 
-            MEAN_gybe[f"{t}"] = Downwind.BSP[t-30 : t+60].reset_index()['BSP']
+            MEAN_gybe[f"{t}"] = Downwind.BSP[t-30 : t+90].reset_index()['BSP']
         MEAN_gybe.mean(axis=1).plot()
 
         fig, ax = plt.subplots()
@@ -169,7 +176,7 @@ if __name__ == '__main__':
         st.pyplot(fig)
 
         fig1, ax1 = plt.subplots()
-        plt.title("Average gybe :from 30s before to 60s after")
+        plt.title("Average gybe :from 30s before to 90s after")
         ax1.plot(MEAN_gybe.mean(axis=1))
         st.pyplot(fig1)
         
